@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Booking Opens Soon</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/booking.css"
+    >
+
+    <script src="../js/booking-config.js"></script>
+</head>
+
+<body>
+
+    <main class="curtain-page">
+
+        <section class="curtain-card">
+
+            <div class="lock-icon">
+                🔒
+            </div>
+
+            <h1>
+                Booking Opens Soon
+            </h1>
+
+            <p class="opening-text">
+                Booking opens at
+                <strong id="openingTime">
+                    22:10 PM
+                </strong>
+                <span>IST</span>
+            </p>
+
+            <div
+                id="countdown"
+                class="countdown"
+                aria-live="polite"
+            >
+                00h 00m 00s
+            </div>
+
+            <p class="timezone">
+                India Standard Time (IST)
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <script>
+        const openingTimeElement =
+            document.getElementById("openingTime");
+
+        const countdownElement =
+            document.getElementById("countdown");
+
+
+        /*
+         * Display the configured opening time.
+         *
+         * If you change:
+         *
+         * OPEN_HOUR = 21
+         * OPEN_MINUTE = 40
+         *
+         * this automatically becomes 9:40 PM.
+         */
+        openingTimeElement.textContent =
+            getOpeningTimeText();
+
+
+        function updateCountdown() {
+
+            /*
+             * If the booking is already open, immediately
+             * send the visitor to /booking/.
+             */
+            if (isBookingOpen()) {
+
+                window.location.replace("../slot-booking/");
+
+                return;
+            }
+
+
+            /*
+             * Get the next opening time.
+             */
+            const target = getNextOpeningDate();
+
+
+            /*
+             * Get current India time.
+             */
+            const now = getIndiaNowAsUTC();
+
+
+            /*
+             * Difference in milliseconds.
+             */
+            const difference =
+                target.getTime() - now.getTime();
+
+
+            /*
+             * Convert milliseconds into:
+             *
+             * hours
+             * minutes
+             * seconds
+             */
+            const totalSeconds =
+                Math.max(
+                    0,
+                    Math.floor(difference / 1000)
+                );
+
+
+            const hours =
+                Math.floor(totalSeconds / 3600);
+
+            const minutes =
+                Math.floor(
+                    (totalSeconds % 3600) / 60
+                );
+
+            const seconds =
+                totalSeconds % 60;
+
+
+            /*
+             * Format with leading zeroes.
+             */
+            const formattedHours =
+                String(hours).padStart(2, "0");
+
+            const formattedMinutes =
+                String(minutes).padStart(2, "0");
+
+            const formattedSeconds =
+                String(seconds).padStart(2, "0");
+
+
+            countdownElement.textContent =
+                `${formattedHours}h ` +
+                `${formattedMinutes}m ` +
+                `${formattedSeconds}s`;
+        }
+
+
+        /*
+         * Update immediately.
+         */
+        updateCountdown();
+
+
+        /*
+         * Update once every second.
+         */
+        setInterval(updateCountdown, 1000);
+    </script>
+
+</body>
+</html>
