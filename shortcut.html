@@ -1,0 +1,786 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head><meta content="noindex, nofollow" name="robots"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KS Digital Service - Automated Clipboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --color-primary: #4361ee;
+            --color-primary-dark: #3a0ca3;
+            --color-primary-light: #4cc9f0;
+            --color-secondary: #f72585;
+            --color-secondary-dark: #b5179e;<!DOCTYPE html>
+            --color-accent: #4ade80;
+            --color-accent-dark: #16a34a;
+            --color-text-light: #f8fafc;
+            --color-text-medium: #cbd5e1;
+            --color-text-dark: #0f172a;
+            --color-bg-dark: #0f172a;
+            --color-bg-card: rgba(30, 41, 59, 0.7);
+            --color-border: rgba(148, 163, 184, 0.3);
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            --radius-xl: 1.5rem;
+            --radius-lg: 1rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--color-bg-dark);
+            color: var(--color-text-medium);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--color-accent-dark);
+            color: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+            max-width: 400px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: var(--color-secondary);
+        }
+
+        /* Floating elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(76, 201, 240, 0.1);
+            backdrop-filter: blur(5px);
+            z-index: 1;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 20%;
+            right: 10%;
+            animation-delay: 2s;
+            background: rgba(247, 37, 133, 0.1);
+        }
+
+        .floating-element:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 4s;
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        
+
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 25vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        /* Content Sections */
+		.main-container {
+    width: 100%;
+    max-width: 100%;     /* remove artificial cap */
+    margin: 0;
+    padding: 40px 50px;  /* keep side breathing space */
+    background: var(--color-bg-card);
+    border-radius: 0;    /* full width should not look like a card */
+    box-shadow: none;    /* shadow looks weird on full width */
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+    z-index: 10;
+}
+     
+
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .page-title {
+            margin-bottom: 10px;
+            color: var(--color-text-light);
+            font-weight: 300;
+            font-size: 2.2rem;
+        }
+
+        .page-title span {
+            font-weight: 700;
+            color: var(--color-primary-light);
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: var(--color-text-medium);
+        }
+
+        .external-service-link {
+            display: inline-block;
+            color: var(--color-primary-light);
+            border: 1px solid var(--color-border);
+            border-radius: 0.3rem;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            text-decoration: none;
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+
+        .external-service-link:hover {
+            background-color: rgba(30, 41, 59, 0.7);
+            border-color: var(--color-primary-light);
+            color: var(--color-text-light);
+        }
+
+        .categories {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .category {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: left;
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--color-primary-light);
+        }
+
+        /* Category Colors */
+        .category-general h2 {
+            color: #6c9eff;
+            border-bottom: 2px solid #6c9eff;
+        }
+
+        .category-licenses h2 {
+            color: #ff6b6b;
+            border-bottom: 2px solid #ff6b6b;
+        }
+
+        .category-webservices h2 {
+            color: #20c997;
+            border-bottom: 2px solid #20c997;
+        }
+
+        .category-exams h2 {
+            color: #9d7bd9;
+            border-bottom: 2px solid #9d7bd9;
+        }
+
+        .category-other h2 {
+            color: #fd7e14;
+            border-bottom: 2px solid #fd7e14;
+        }
+
+        .category h2 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        /* Button Styles */
+        .category button {
+            display: block;
+            border: none;
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-md);
+            transform: translateY(0);
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid var(--color-border);
+        }
+
+        .category button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .category button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .category button:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* Button Category Colors */
+        .category-general button {
+            background: linear-gradient(135deg, rgba(108, 158, 255, 0.7) 0%, rgba(74, 125, 245, 0.7) 100%);
+        }
+
+        .category-licenses button {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.7) 0%, rgba(200, 35, 51, 0.7) 100%);
+        }
+
+        .category-webservices button {
+            background: linear-gradient(135deg, rgba(32, 201, 151, 0.7) 0%, rgba(23, 166, 115, 0.7) 100%);
+        }
+
+        .category-exams button {
+            background: linear-gradient(135deg, rgba(157, 123, 217, 0.7) 0%, rgba(126, 92, 196, 0.7) 100%);
+        }
+
+        .category-other button {
+            background: linear-gradient(135deg, rgba(253, 126, 20, 0.7) 0%, rgba(247, 103, 7, 0.7) 100%);
+        }
+
+        /* Floating WhatsApp button */
+        .whatsapp-float {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            bottom: 40px;
+            right: 40px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            animation: pulse 2s infinite;
+            transform: translateY(0);
+        }
+
+        .whatsapp-float:hover {
+            transform: translateY(-10px) rotate(10deg);
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.6);
+            background: var(--gradient-secondary);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+
+        /* Home Button */
+        .home-logo-button {
+            position: fixed;
+            top: 25px;
+            left: 30px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-md);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            z-index: 1000;
+            color: var(--color-primary-dark);
+        }
+
+        .home-logo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: var(--color-primary);
+        }
+
+        /* Social Media Section */
+        .social-media-section {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .online-services-heading {
+            font-family: 'Poppins', sans-serif;
+            color: var(--color-primary-light);
+            font-weight: 700;
+            margin: 1.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--color-primary-light);
+            padding-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .blink-text {
+            animation: blink 2s infinite;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: rgba(2, 6, 23, 0.9);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid var(--color-border);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .footer-about {
+            margin-bottom: 1.5rem;
+            max-width: 400px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 41, 59, 0.7);
+            color: var(--color-text-light);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            background: var(--gradient-primary);
+        }
+
+        .footer-heading {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--gradient-primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--color-text-medium);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-text-light);
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            transition: transform 0.3s ease;
+        }
+
+        .footer-links a:hover i {
+            transform: translateX(3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 3rem;
+            color: var(--color-text-medium);
+            font-size: 0.9rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem 0;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .categories {
+                flex-wrap: wrap;
+            }
+            .category {
+                flex-basis: 48%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            .whatsapp-float {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+                bottom: 30px;
+                right: 30px;
+            }
+            .hero-section {
+                min-height: 25vh;
+                clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+            }
+            .category {
+                flex-basis: 100%;
+            }
+            .home-logo-button {
+                left: 15px;
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            .main-container {
+                padding: 15px;
+            }
+        }
+
+        .instruction-panel {
+            background: #1e293b;
+            border-left: 4px solid #4361ee;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .instruction-panel h4 {
+            color: #4cc9f0;
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .instruction-panel code {
+            background: rgba(0,0,0,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 3px 0;
+            font-family: monospace;
+        }
+        
+        .instruction-panel .icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .service-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+		.nav {
+    background: #0f172a;
+    color: white;
+    padding: 14px;
+    font-weight: 800;
+    font-size: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+
+    display: flex;
+    justify-content: center;   /* horizontal center */
+    align-items: center;       /* vertical center */
+}
+    </style>
+</head>
+<body>
+<!-- Particles Background -->
+<div class="nav">KS DIGITAL SERVICES</div>
+<div id="particles-js"></div>
+<!-- Main Content -->
+<div class="main-container">
+<div class="categories">
+<!-- 1 LOCAL PRINTING (8) -->
+<div class="category category-general">
+<h2>Local</h2><button onclick="window.open('http://localhost:8080','_blank')">pvc</button>
+<button onclick="window.open('http://localhost:8080/api/temp','_blank')">lamination</button>
+<button onclick="window.open('http://localhost:8080/passport_photo','_blank')">Passport Photo</button>
+<button onclick="window.open('https://www.adobe.com/express/feature/image/remove-background','_blank')">Photo bg remove</button>
+<button onclick="window.open('https://www.ilovepdf.com/compress_pdf','_blank')">pdf compress</button>
+<button onclick="window.open('http://imagecompressor.com/','_blank')">photo compress</button>
+<button onclick="window.open('https://www.ilovepdf.com/pdf_to_jpg','_blank')">pdf to jpg</button>
+<button onclick="window.open('https://www.ilovepdf.com/jpg_to_pdf','_blank')">jpg to pdf</button>
+<button onclick="window.open('https://www.sejda.com/pdf-editor','_blank')">pdf editor</button>
+<button onclick="window.open('https://www.ilovepdf.com/pdf_to_word','_blank')">pdf to word</button>
+<button onclick="window.open('https://www.ilovepdf.com/merge_pdf','_blank')">pdf merger</button>
+</div>
+<!-- 2 AADHAAR PAN (8) -->
+<div class="category category-exams">
+<h2>services</h2>
+<button onclick="window.open('https://services2.passportindia.gov.in/forms/PreLogin','_blank')">PASSPORT</button>
+<button onclick="window.open('https://myaadhaar.uidai.gov.in/en_IN','_blank')">Aadhar Update</button>
+<button onclick="window.open('https://myaadhaar.uidai.gov.in/CheckAadhaarStatus/en','_blank')">Aadhar STATUS</button>
+<button onclick="window.open('https://myaadhaar.uidai.gov.in/check-aadhaar-validity/en','_blank')">Aadhar Validity</button>
+<button onclick="window.open('https://voters.eci.gov.in/signup','_blank')">Voter ID</button>
+<button onclick="window.open('https://www.onlineservices.proteantech.in/paam/endUserRegisterContact.html','_blank')">NSDL PAN</button>
+<button onclick="window.open('https://onlineservices.proteantech.in/paam/endUserAddressUpdate.html','_blank')">PAN Ph/Email Update</button>
+<button onclick="window.open('https://mypanchayat.in/portal/profile','_blank')">Sarkari</button>
+<button onclick="window.open('https://eportal.incometax.gov.in/iec/foservices/#/pre-login/instant-e-pan','_blank')">Instant PAN</button>
+<button onclick="window.open('https://eportal.incometax.gov.in/iec/foservices/#/pre-login/link-aadhaar-status','_blank')">PAN AADHAR LINK</button>
+<button onclick="window.open('https://onlineservices.proteantech.in/paam/requestAndDownloadEPAN.html','_blank')">NSDL E-PAN</button>
+<button onclick="window.open('https://unifiedportal-mem.epfindia.gov.in/memberinterface/','_blank')">PF (EPFO)</button>
+<button onclick="window.open('https://www.incometax.gov.in/iec/foportal/','_blank')">ITR Filing</button>
+<button onclick="window.open('https://services.gst.gov.in/services/quicklinks/registration','_blank')">GST Services</button>
+<button onclick="window.open('https://www.digilocker.gov.in/','_blank')">digilocker</button>
+</div>
+<!-- 7 BUSINESS LICENSES (8) -->
+<div class="category category-licenses">
+<h2>Licenses</h2>
+<button onclick="window.open('https://foscos.fssai.gov.in/','_blank')">Food</button>
+<button onclick="window.open('https://trade.ghmc.gov.in/','_blank')">hyd Trade</button>
+<button onclick="window.open('https://cdma.cgg.gov.in/cdma_trade/NewTrade/Get_Cit_SaveNewTrade','_blank')">CDMA Trade</button>
+<button onclick="window.open('https://labour.telangana.gov.in/Entrepreneur.do','_blank')">Labour</button>
+<button onclick="window.open('https://udyamregistration.gov.in/','_blank')">UDYAM</button>
+<button onclick="window.open('https://bhubharati.telangana.gov.in/homePage/','_blank')">Bhu Bharati Land Records</button>
+<button onclick="window.open('https://registration.telangana.gov.in/ec.htm','_blank')">EC</button>
+<button onclick="window.open('https://registration.telangana.gov.in/UnitRateMV/getDistrictList.htm','_blank')">Market Value</button>
+<button onclick="window.open('https://registration.telangana.gov.in/','_blank')">Registration Slot</button>
+<button onclick="window.open('https://lrs.telangana.gov.in/','_blank')">LRS / BRS</button>
+</div>
+<!-- 8 TRAVEL BILLS (7) -->
+<div class="category category-webservices">
+<h2>Bills </h2>
+<button onclick="window.open('https://ttdevasthanams.ap.gov.in/home/dashboard','_blank')">TTD TICKETS</button>
+<button onclick="window.open('/ttdjson4.html','_blank')">TTD file</button>
+<button onclick="window.open('https://www.irctc.co.in/nget/train-search','_blank')">IRCTC</button>
+<button onclick="window.open('https://www.makemytrip.com/bus-tickets/hyderabad-city-online-booking.html','_blank')">BUS TICKET</button>
+<button onclick="window.open('https://www.skyscanner.co.in/','_blank')">FLIGHT TICKET</button>
+<button onclick="window.open('https://www.billdesk.com/pgidsk/pgmerc/tsspdclpgi/TSSPDCLPGIDetails.jsp','_blank')">Power Bill</button>
+<button onclick="window.open('https://www.amazon.in/amazonpay/home/','_blank')">Amazon Payments</button>
+<button onclick="window.open('https://onlinepayments.ghmc.gov.in/','_blank')">Property Tax</button>
+<button onclick="window.open('https://echallan.parivahan.gov.in/','_blank')">Traffic Challan</button>
+<button onclick="window.open('https://www.paisabazaar.com/cibil-credit-report/','_blank')">cibil score</button>
+</div>
+<!-- 4 CERTIFICATES (7) -->
+<div class="category category-general">
+<h2>Govt </h2>
+<button onclick="window.open('https://meeseva.telangana.gov.in/meeseva/home.htm','_blank')">Meeseva</button>
+<button onclick="window.open('https://epds.telangana.gov.in/FoodSecurityAct/?wicket:bookmarkablePage=:nic.fsc.foodsecurity.FscSearch','_blank')">Ration</button>
+<button onclick="window.open('https://epds.telangana.gov.in/FoodSecurityAct/?wicket:bookmarkablePage=:nic.fsc.foodsecurity.FscApplicationSearch','_blank')">FSC by Aadhar</button>
+<button onclick="window.open('https://registration.telangana.gov.in/marriageRegistration.htm','_blank')">Marriage</button>
+<button onclick="window.open('https://pmjay.gov.in/','_blank')">PMJAY Card</button>
+<button onclick="window.open('https://beneficiary.nha.gov.in/','_blank')">Ayushman Card</button>
+<button onclick="window.open('https://abha.abdm.gov.in/abha/v3/','_blank')">abha id</button>
+<button onclick="window.open('https://register.eshram.gov.in/#/user/self','_blank')">E-Shram</button>
+<button onclick="window.open('https://swavlambancard.gov.in/Applyforudid','_blank')">UDID</button>
+<button onclick="window.open('https://www.ehf.telangana.gov.in/EHS/','_blank')">EHS</button>
+</div>
+<!-- 6 DRIVING VEHICLE (8) -->
+<div class="category category-licenses">
+<h2>Vehicle</h2>
+<button onclick="window.open('https://transport.telangana.gov.in/html/driving-licencel-learners.html','_blank')">LL Apply </button>
+<button onclick="window.open('https://sarathi.parivahan.gov.in/sarathiservice/stateSelection.do','_blank')">DL Apply</button>
+<button onclick="window.open('https://parivahan.gov.in/parivahan//en/content/vehicle-related-services','_blank')">RC Services</button>
+<button onclick="window.open('https://vahan.parivahan.gov.in/vahanservice/vahan/ui/statevalidation/homepage.xhtml','_blank')">RC Transfer</button>
+<button onclick="window.open('https://vahan.parivahan.gov.in/nrservices/','_blank')">Vehicle Details</button>
+<button onclick="window.open('https://fancy.parivahan.gov.in/fancy/faces/public/login.xhtml','_blank')">Fancy NO</button>
+<button onclick="window.open('https://www.tataaig.com/','_blank')">Insurance</button>
+<button onclick="window.open('https://morth.nic.in/#/','_blank')"> Permit</button>
+</div>
+<!-- 9 EDUCATION JOBS (8) -->
+<div class="category category-other">
+<h2>Education</h2>
+<button onclick="window.open('https://results.cbse.nic.in/','_blank')">cbse results</button>
+<button onclick="window.open('https://results.bse.telangana.gov.in/','_blank')">10th Results</button>
+<button onclick="window.open('https://results.inter.telangana.gov.in/','_blank')">Inter result</button>
+<button onclick="window.open('https://www.rrbcdg.gov.in/','_blank')">Railway Recruitment</button>
+<button onclick="window.open('https://ssc.gov.in/home','_blank')">SSC Jobs</button>
+<button onclick="window.open('https://joinindianarmy.nic.in/','_blank')">Army</button>
+<button onclick="window.open('https://www.joinindiannavy.gov.in/','_blank')">Navy</button>
+<button onclick="window.open('https://indianairforce.nic.in/','_blank')">Airforce</button>
+</div>
+<div class="category category-other">
+<h2>CET </h2>
+<button onclick="window.open('https://jeemain.nta.nic.in/','_blank')">IIT-JEE</button>
+<button onclick="window.open('https://www.polycet.sbtet.telangana.gov.in/#!/index/Registration','_blank')">ploycet</button>
+<button onclick="window.open('https://eapcet.tgche.ac.in/','_blank')">EAMCET</button>
+<button onclick="window.open('https://ecet.tgche.ac.in/','_blank')">ECET</button>
+<button onclick="window.open('https://dost.cgg.gov.in/','_blank')">Dost</button>
+<button onclick="window.open('https://icet.tgche.ac.in/','_blank')">ICET</button>
+<button onclick="window.open('https://lawcet.tgche.ac.in/','_blank')">LAW CET</button>
+<button onclick="window.open('https://gate.iitk.ac.in/','_blank')">GATE</button>
+<button onclick="window.open('https://telanganaepass.cgg.gov.in/','_blank')">Scholarships</button>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head><meta content="noindex, nofollow" name="robots"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secure Tools</title>
+<style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+        }
+
+        /* ================================
+           PASSWORD SCREEN
+           ================================ */
+
+        #lockScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        .login-box input {
+            width: 100%;
+            height: 52px;
+            padding: 0 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .login-box input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .login-box button {
+            width: 100%;
+            height: 52px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-box button:hover {
+            background: #1d4ed8;
+        }
+
+        #errorMessage {
+            display: none;
+            margin-top: 12px;
+            color: #dc2626;
+            font-size: 14px;
+        }
+
+
+        /* ================================
+           TOOLS PAGE
+           ================================ */
+
+        #toolsPage {
+            display: none;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .tools-container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .tool-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 65px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            color: #111827;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            transition: 0.2s;
+        }
+
+        .tool-button:hover {
+            transform: translateY(-2px);
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        .logout-button {
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 25px auto 0;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #111827;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #374151;
+        }
+
+
+        /* ================================
+           MOBILE
+           ================================ */
+
+        @media (max-width: 600px) {
+
+            #toolsPage {
+                padding: 20px 15px;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .tool-button {
+                min-height: 58px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- ==========================================================
+         PASSWORD SCREEN
+         ==========================================================
+         Nothing except the password login interface is displayed
+         before successful authentication.
+         ========================================================== -->
+<div id="lockScreen">
+<div class="login-box">
+<form autocomplete="off" id="loginForm">
+<input autocomplete="off" id="passwordInput" placeholder="Enter password" required="" spellcheck="false" type="password"/>
+<button type="submit">
+                    Enter
+                </button>
+</form>
+<div id="errorMessage">
+                Incorrect password
+            </div>
+</div>
+</div>
+<!-- ==========================================================
+         10 BUTTONS PAGE
+         ==========================================================
+         This page remains completely hidden until the correct
+         password is entered.
+         ========================================================== -->
+<div id="toolsPage">
+<div class="tools-container">
+<div class="tools-grid">
+<!-- BUTTON 1 -->
+<a class="CGHS" href="https://ksdigitalservices.in/CGHS1" target="_blank">
+                    Page 1
+                </a>
+<!-- BUTTON 2 -->
+<a class="marriage" href="https://ksdigitalservices.in/FemaleMarriage" target="_blank">
+                    Page 2
+                </a>
+<!-- BUTTON 3 -->
+<a class="tool-button" href="https://example.com/page3" target="_blank">
+                    Page 3
+                </a>
+<!-- BUTTON 4 -->
+<a class="tool-button" href="https://example.com/page4" target="_blank">
+                    Page 4
+                </a>
+<!-- BUTTON 5 -->
+<a class="tool-button" href="https://example.com/page5" target="_blank">
+                    Page 5
+                </a>
+<!-- BUTTON 6 -->
+<a class="tool-button" href="https://example.com/page6" target="_blank">
+                    Page 6
+                </a>
+<!-- BUTTON 7 -->
+<a class="tool-button" href="https://example.com/page7" target="_blank">
+                    Page 7
+                </a>
+<!-- BUTTON 8 -->
+<a class="tool-button" href="https://example.com/page8" target="_blank">
+                    Page 8
+                </a>
+<!-- BUTTON 9 -->
+<a class="tool-button" href="https://example.com/page9" target="_blank">
+                    Page 9
+                </a>
+<!-- BUTTON 10 -->
+<a class="tool-button" href="https://example.com/page10" target="_blank">
+                    Page 10
+                </a>
+</div>
+<!-- Lock again -->
+<button class="logout-button" id="logoutButton">
+                🔒 Lock
+            </button>
+</div>
+</div>
+<script>
+        /*
+         * ==========================================================
+         * CLIENT-SIDE PASSWORD PROTECTION
+         * ==========================================================
+         *
+         * The tools page is hidden when the HTML file opens.
+         *
+         * Only the password screen is displayed.
+         *
+         * When the user enters the correct password:
+         *   1. Password screen is hidden.
+         *   2. Tools page containing the 10 buttons is displayed.
+         *
+         * When the password is incorrect:
+         *   1. "Incorrect password" is displayed.
+         *   2. Tools page remains hidden.
+         *
+         * Pressing ENTER works because the password field is inside
+         * a normal HTML form.
+         *
+         * IMPORTANT:
+         * This is client-side protection and is intended only for
+         * dummy/demo pages. It does not provide real security.
+         * ==========================================================
+         */
+
+        const PASSWORD = "Tools@2026";
+
+        const loginForm = document.getElementById("loginForm");
+        const passwordInput = document.getElementById("passwordInput");
+        const lockScreen = document.getElementById("lockScreen");
+        const toolsPage = document.getElementById("toolsPage");
+        const errorMessage = document.getElementById("errorMessage");
+        const logoutButton = document.getElementById("logoutButton");
+
+
+        // Login
+        loginForm.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            if (passwordInput.value === PASSWORD) {
+
+                // Correct password
+                lockScreen.style.display = "none";
+                toolsPage.style.display = "block";
+
+                passwordInput.value = "";
+                errorMessage.style.display = "none";
+
+            } else {
+
+                // Wrong password
+                toolsPage.style.display = "none";
+                errorMessage.style.display = "block";
+
+                passwordInput.value = "";
+                passwordInput.focus();
+            }
+        });
+
+
+        // Lock / Logout
+        logoutButton.addEventListener("click", function() {
+
+            toolsPage.style.display = "none";
+            lockScreen.style.display = "flex";
+
+            passwordInput.value = "";
+            errorMessage.style.display = "none";
+
+            passwordInput.focus();
+
+            window.scrollTo(0, 0);
+        });
+
+
+        // Always start with the password screen.
+        toolsPage.style.display = "none";
+
+        window.addEventListener("load", function() {
+            passwordInput.focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head><meta content="noindex, nofollow" name="robots"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>JSON Form Generator</title>
+<style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      padding: 20px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .add-btn {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .download-btn {
+      background: #059669;
+      color: white;
+    }
+
+    .remove-btn {
+      background: #dc2626;
+      color: white;
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      word-wrap: break-word;
+      overflow-x: auto;
+    }
+
+    th,
+    td {
+      border: 1px solid #d1d5db;
+      padding: 6px;
+      vertical-align: top;
+      min-width: 90px;
+      max-width: 120px;
+      font-size: 12px;
+    }
+
+    th {
+      background: #111827;
+      color: white;
+      text-transform: capitalize;
+      position: sticky;
+      top: 0;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    .error {
+      border: 1px solid red;
+      background: #fff5f5;
+    }
+
+    .note {
+      margin-top: 12px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .table-wrapper {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+<h1>Dynamic JSON Form Generator</h1>
+<div class="top-bar">
+<button class="add-btn" onclick="addPerson()">Add Person</button>
+<button class="download-btn" onclick="downloadJSON()">Download JSON</button>
+</div>
+<div class="table-wrapper">
+<table id="peopleTable">
+<thead>
+<tr id="tableHead"></tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+<div class="note">
+      Maximum allowed entries: 6 people.
+    </div>
+</div>
+<script>
+    // Sample JSON Structure
+    const sampleData = [
+      {
+        "date": "",
+        "people": "",
+        "time": "1600",
+        "name": "",
+        "age": "",
+        "gender": "Male",
+        "aadhar": "",
+        "email": "",
+        "city": "Hyderabad",
+        "state": "Telangana",
+        "country": "India",
+        "pincode": "500040",
+        "gotram": "",
+        "upi": ""
+      }
+    ];
+
+    const MAX_PEOPLE = 6;
+
+    // Remove unwanted keys
+    const excludedKeys = ["undefined"];
+
+    const fields = Object.keys(sampleData[0]).filter(
+      key => !excludedKeys.includes(key)
+    );
+
+    function createTableHeader() {
+      const headRow = document.getElementById("tableHead");
+      headRow.innerHTML = "";
+
+      fields.forEach(field => {
+        const th = document.createElement("th");
+        th.textContent = formatLabel(field);
+        headRow.appendChild(th);
+      });
+
+      const actionTh = document.createElement("th");
+      actionTh.textContent = "Action";
+      headRow.appendChild(actionTh);
+    }
+
+    function formatLabel(key) {
+      return key
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    function createInput(field, value = "") {
+      let element;
+
+      // Dropdown for gender
+      if (field === "gender") {
+        element = document.createElement("select");
+
+        const options = ["", "Male", "Female", "Other"];
+
+        options.forEach(optionValue => {
+          const option = document.createElement("option");
+          option.value = optionValue;
+          option.textContent = optionValue || "Select";
+
+          if (optionValue === value) {
+            option.selected = true;
+          }
+
+          element.appendChild(option);
+        });
+      } else {
+        element = document.createElement("input");
+
+        if (field === "email") {
+          element.type = "email";
+        } else if (["age", "people", "pincode"].includes(field)) {
+          element.type = "number";
+        } else {
+          element.type = "text";
+        }
+
+        element.value = value || "";
+      }
+
+      element.dataset.field = field;
+
+      // Basic validation
+      if (field === "aadhar") {
+        element.maxLength = 12;
+      }
+
+      return element;
+    }
+
+    function addRow(data = {}) {
+      const tbody = document.getElementById("tableBody");
+
+      if (tbody.children.length >= MAX_PEOPLE) {
+        alert("Maximum limit reached. Only 6 people allowed.");
+        return;
+      }
+
+      const tr = document.createElement("tr");
+
+      fields.forEach(field => {
+        const td = document.createElement("td");
+        const input = createInput(field, data[field]);
+        td.appendChild(input);
+        tr.appendChild(td);
+      });
+
+      const actionTd = document.createElement("td");
+      const removeBtn = document.createElement("button");
+
+      removeBtn.textContent = "Remove";
+      removeBtn.className = "remove-btn";
+
+      removeBtn.onclick = () => {
+        tr.remove();
+      };
+
+      actionTd.appendChild(removeBtn);
+      tr.appendChild(actionTd);
+
+      tbody.appendChild(tr);
+    }
+
+    function addPerson() {
+      addRow({});
+    }
+
+    function validateRow(rowData) {
+      let valid = true;
+
+      if (!rowData.name || rowData.name.trim() === "") {
+        valid = false;
+      }
+
+      if (rowData.email && !/^\S+@\S+\.\S+$/.test(rowData.email)) {
+        valid = false;
+      }
+
+      if (rowData.aadhar && rowData.aadhar.length !== 12) {
+        valid = false;
+      }
+
+      return valid;
+    }
+
+    function collectData() {
+      const rows = document.querySelectorAll("#tableBody tr");
+      const result = [];
+
+      rows.forEach(row => {
+        const obj = {};
+
+        row.querySelectorAll("input, select").forEach(input => {
+          obj[input.dataset.field] = input.value;
+        });
+
+        result.push(obj);
+      });
+
+      return result;
+    }
+
+    function downloadJSON() {
+      const data = collectData();
+
+      // Validation
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+
+        if (!validateRow(row)) {
+          alert(`Validation failed for row ${i + 1}. Check name, email, or Aadhaar.`);
+          return;
+        }
+      }
+
+      const jsonString = JSON.stringify(data, null, 2);
+
+      const blob = new Blob([jsonString], {
+        type: "application/json"
+      });
+
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      const firstPersonName = data[0]?.name?.trim() || "people-data";
+      const safeFileName = firstPersonName.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s\+/g, " ").trim();
+
+      a.download = safeFileName + "_ttd.json";
+
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Initialize
+    createTableHeader();
+
+    sampleData.forEach(person => {
+      addRow(person);
+    });
+  </script>
+</body>
+</html>

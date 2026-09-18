@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head><meta content="noindex, nofollow" name="robots"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>JSON Form Generator</title>
+<style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      padding: 20px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .add-btn {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .download-btn {
+      background: #059669;
+      color: white;
+    }
+
+    .people-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .person-card {
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .person-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111827;
+      color: white;
+      padding: 10px 14px;
+    }
+
+    .person-title {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      background: #dc2626;
+      color: white;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .person-body {
+      padding: 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      min-height: 48px;
+    }
+
+    .form-row:last-child {
+      border-bottom: none;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #374151;
+      padding-right: 15px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      font-size: 13px;
+      background: white;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+
+    .error {
+      border: 1px solid red !important;
+      background: #fff5f5;
+    }
+
+    .note {
+      margin-top: 15px;
+      color: #555;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 12px;
+      }
+
+      .top-bar {
+        flex-direction: column;
+      }
+
+      .top-bar button {
+        width: 100%;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 9px 0;
+      }
+
+      .form-label {
+        padding-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+<h1>Dynamic JSON Form Generator</h1>
+<div class="top-bar">
+<button class="add-btn" onclick="addPerson()">
+        Add Person
+      </button>
+<button class="download-btn" onclick="downloadJSON()">
+        Download JSON
+      </button>
+</div>
+<div class="people-container" id="peopleContainer"></div>
+<div class="note">
+      Maximum allowed entries: 6 people.
+    </div>
+</div>
+<script>
+
+    // ============================================================
+    // SAMPLE JSON STRUCTURE
+    // ============================================================
+
+    const sampleData = [
+      {
+        "date": "",
+        "people": "",
+        "time": "1600",
+        "name": "",
+        "age": "",
+        "gender": "Male",
+        "aadhar": "",
+        "email": "",
+        "city": "Hyderabad",
+        "state": "Telangana",
+        "country": "India",
+        "pincode": "500040",
+        "gotram": "",
+        "upi": ""
+      }
+    ];
+
+    const MAX_PEOPLE = 6;
+
+    // Remove unwanted keys
+    const excludedKeys = ["undefined"];
+
+    const fields = Object.keys(sampleData[0]).filter(
+      key => !excludedKeys.includes(key)
+    );
+
+
+    // ============================================================
+    // FORMAT LABEL
+    // ============================================================
+
+    function formatLabel(key) {
+      return key
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+
+    // ============================================================
+    // CREATE INPUT
+    // ============================================================
+
+    function createInput(field, value = "") {
+
+      let element;
+
+      // Gender dropdown
+      if (field === "gender") {
+
+        element = document.createElement("select");
+
+        const options = [
+          "",
+          "Male",
+          "Female",
+          "Other"
+        ];
+
+        options.forEach(optionValue => {
+
+          const option = document.createElement("option");
+
+          option.value = optionValue;
+          option.textContent = optionValue || "Select";
+
+          if (optionValue === value) {
+            option.selected = true;
+          }
+
+          element.appendChild(option);
+
+        });
+
+      } else {
+
+        element = document.createElement("input");
+
+        if (field === "email") {
+
+          element.type = "email";
+
+        } else if (
+          ["age", "people", "pincode"].includes(field)
+        ) {
+
+          element.type = "number";
+
+        } else {
+
+          element.type = "text";
+
+        }
+
+        element.value = value || "";
+      }
+
+
+      // Store field name
+      element.dataset.field = field;
+
+
+      // Aadhaar validation
+      if (field === "aadhar") {
+
+        element.maxLength = 12;
+
+        element.inputMode = "numeric";
+
+      }
+
+
+      // Pincode validation
+      if (field === "pincode") {
+
+        element.maxLength = 6;
+
+      }
+
+
+      return element;
+    }
+
+
+    // ============================================================
+    // ADD PERSON CARD
+    // ============================================================
+
+    function addRow(data = {}) {
+
+      const container =
+        document.getElementById("peopleContainer");
+
+
+      // Maximum limit
+      if (container.children.length >= MAX_PEOPLE) {
+
+        alert(
+          "Maximum limit reached. Only 6 people allowed."
+        );
+
+        return;
+      }
+
+
+      const personNumber =
+        container.children.length + 1;
+
+
+      // Main card
+      const card =
+        document.createElement("div");
+
+      card.className = "person-card";
+
+
+      // ========================================================
+      // HEADER
+      // ========================================================
+
+      const header =
+        document.createElement("div");
+
+      header.className = "person-header";
+
+
+      const title =
+        document.createElement("div");
+
+      title.className = "person-title";
+
+      title.textContent =
+        "Person " + personNumber;
+
+
+      // Remove button
+      const removeBtn =
+        document.createElement("button");
+
+      removeBtn.textContent = "Remove";
+
+      removeBtn.className = "remove-btn";
+
+
+      removeBtn.onclick = () => {
+
+        card.remove();
+
+        updatePersonNumbers();
+
+      };
+
+
+      header.appendChild(title);
+      header.appendChild(removeBtn);
+
+
+      // ========================================================
+      // BODY
+      // ========================================================
+
+      const body =
+        document.createElement("div");
+
+      body.className = "person-body";
+
+
+      // Person 1 shows all fields.
+      // Persons 2 to 6 show only Name, Age, Gender and Aadhaar.
+      const personFields =
+        personNumber === 1
+          ? fields
+          : ["name", "age", "gender", "aadhar"];
+
+      personFields.forEach(field => {
+
+        const row =
+          document.createElement("div");
+
+        row.className = "form-row";
+
+
+        // Label
+        const label =
+          document.createElement("div");
+
+        label.className = "form-label";
+
+        label.textContent =
+          formatLabel(field);
+
+
+        // Input
+        const input =
+          createInput(field, data[field]);
+
+
+        row.appendChild(label);
+        row.appendChild(input);
+
+        body.appendChild(row);
+
+      });
+
+
+      card.appendChild(header);
+      card.appendChild(body);
+
+      container.appendChild(card);
+    }
+
+
+    // ============================================================
+    // ADD PERSON
+    // ============================================================
+
+    function addPerson() {
+
+      addRow({});
+
+    }
+
+
+    // ============================================================
+    // UPDATE PERSON NUMBERS
+    // ============================================================
+
+    function updatePersonNumbers() {
+
+      const cards =
+        document.querySelectorAll(".person-card");
+
+
+      cards.forEach((card, index) => {
+
+        const title =
+          card.querySelector(".person-title");
+
+        title.textContent =
+          "Person " + (index + 1);
+
+      });
+
+    }
+
+
+    // ============================================================
+    // VALIDATE ROW
+    // ============================================================
+
+    function validateRow(rowData) {
+
+      let valid = true;
+
+
+      // Name required
+      if (
+        !rowData.name ||
+        rowData.name.trim() === ""
+      ) {
+
+        valid = false;
+
+      }
+
+
+      // Email validation
+      if (
+        rowData.email &&
+        !/^\S+@\S+\.\S+$/.test(rowData.email)
+      ) {
+
+        valid = false;
+
+      }
+
+
+      // Aadhaar validation
+      if (
+        rowData.aadhar &&
+        rowData.aadhar.length !== 12
+      ) {
+
+        valid = false;
+
+      }
+
+
+      return valid;
+    }
+
+
+    // ============================================================
+    // COLLECT DATA
+    // ============================================================
+
+    function collectData() {
+
+      const cards =
+        document.querySelectorAll(".person-card");
+
+      const result = [];
+
+
+      cards.forEach(card => {
+
+        const obj = {};
+
+
+        card
+          .querySelectorAll("input, select")
+          .forEach(input => {
+
+            obj[input.dataset.field] =
+              input.value;
+
+          });
+
+
+        result.push(obj);
+
+      });
+
+
+      return result;
+    }
+
+
+    // ============================================================
+    // DOWNLOAD JSON
+    // ============================================================
+
+    function downloadJSON() {
+
+      const data =
+        collectData();
+
+
+      // No people
+      if (data.length === 0) {
+
+        alert(
+          "Please add at least one person."
+        );
+
+        return;
+
+      }
+
+
+      // Validation
+      for (
+        let i = 0;
+        i < data.length;
+        i++
+      ) {
+
+        const row = data[i];
+
+
+        if (!validateRow(row)) {
+
+          alert(
+            `Validation failed for Person ${i + 1}. ` +
+            `Check name, email, or Aadhaar.`
+          );
+
+          return;
+
+        }
+
+      }
+
+
+      // Convert to JSON
+      const jsonString =
+        JSON.stringify(
+          data,
+          null,
+          2
+        );
+
+
+      // Create file
+      const blob =
+        new Blob(
+          [jsonString],
+          {
+            type: "application/json"
+          }
+        );
+
+
+      const url =
+        URL.createObjectURL(blob);
+
+
+      const a =
+        document.createElement("a");
+
+
+      a.href = url;
+
+
+      // File name from first person's name
+      const firstPersonName =
+        data[0]?.name?.trim() ||
+        "people-data";
+
+
+      const safeFileName =
+        firstPersonName
+          .replace(/[^a-zA-Z0-9 ]/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+
+
+      a.download =
+        safeFileName + "_ttd.json";
+
+
+      document.body.appendChild(a);
+
+      a.click();
+
+      document.body.removeChild(a);
+
+      URL.revokeObjectURL(url);
+
+    }
+
+
+    // ============================================================
+    // INITIALIZE
+    // ============================================================
+
+    sampleData.forEach(person => {
+
+      addRow(person);
+
+    });
+
+  </script>
+</body>
+</html>
