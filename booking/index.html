@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Booking</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/booking.css"
+    >
+
+    <!--
+        Load the shared configuration BEFORE the booking
+        protection script.
+    -->
+    <script src="../js/booking-config.js"></script>
+
+    <script>
+        /*
+         * =====================================================
+         * BOOKING ACCESS PROTECTION
+         * =====================================================
+         *
+         * This runs on the /booking page itself.
+         *
+         * Therefore, even if somebody manually enters:
+         *
+         * https://ksdigitalservices.in/booking/
+         *
+         * before opening time, they will be redirected.
+         */
+
+        if (!isBookingOpen()) {
+            window.location.replace("../curtain/");
+        }
+    </script>
+</head>
+
+<body>
+
+    <main class="page-container">
+
+        <section class="booking-card">
+
+            <h1>Booking</h1>
+
+            <p class="subtitle">
+                Booking is currently open.
+            </p>
+
+            <!--
+                =================================================
+                YOUR EXISTING BOOKING FORM / CONTENT GOES HERE
+                =================================================
+            -->
+
+            <form id="bookingForm">
+
+                <div class="form-group">
+                    <label for="name">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="date">
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="time">
+                        Time
+                    </label>
+
+                    <input
+                        type="time"
+                        id="time"
+                        name="time"
+                        required
+                    >
+                </div>
+
+                <button type="submit">
+                    Continue Booking
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <script>
+        /*
+         * Optional second check after the page has loaded.
+         *
+         * The check in <head> is the important one.
+         * This additional check protects against the opening
+         * time changing while the page is sitting open.
+         */
+
+        function checkBookingAccess() {
+            if (!isBookingOpen()) {
+                window.location.replace("../curtain/");
+            }
+        }
+
+        /*
+         * Check periodically in case the user leaves the page
+         * open across the next booking boundary.
+         */
+        setInterval(checkBookingAccess, 1000);
+
+
+        /*
+         * Demo form behavior.
+         *
+         * Replace this with your existing booking logic.
+         */
+        document
+            .getElementById("bookingForm")
+            .addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                alert("Booking form submitted.");
+            });
+    </script>
+
+</body>
+</html>
