@@ -11,7 +11,7 @@
  */
 
 const OPEN_HOUR = 22;
-const OPEN_MINUTE = 20;
+const OPEN_MINUTE = 25;
 
 const TIME_ZONE = "Asia/Kolkata";
 
