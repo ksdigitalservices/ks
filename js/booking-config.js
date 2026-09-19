@@ -10,8 +10,8 @@
  * 10:30 = 10:30 AM IST
  */
 
-const OPEN_HOUR = 22;
-const OPEN_MINUTE = 25;
+const OPEN_HOUR = 9;
+const OPEN_MINUTE = 35;
 
 const TIME_ZONE = "Asia/Kolkata";
 
