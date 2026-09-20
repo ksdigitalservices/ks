@@ -57,118 +57,110 @@
     </main>
 
 
-    <script>
-        const openingTimeElement =
-            document.getElementById("openingTime");
+   <script>
+    const openingTimeElement =
+        document.getElementById("openingTime");
 
-        const countdownElement =
-            document.getElementById("countdown");
+    const countdownElement =
+        document.getElementById("countdown");
+
+
+    /*
+     * Display the configured opening time.
+     */
+    openingTimeElement.textContent =
+        getOpeningTimeText();
+
+
+    function updateCountdown() {
+
+        /*
+         * Get the next opening time.
+         */
+        const target = getNextOpeningDate();
 
 
         /*
-         * Display the configured opening time.
-         *
-         * If you change:
-         *
-         * OPEN_HOUR = 21
-         * OPEN_MINUTE = 40
-         *
-         * this automatically becomes 9:40 PM.
+         * Get current India time.
          */
-        openingTimeElement.textContent =
-            getOpeningTimeText();
+        const now = getIndiaNowAsUTC();
 
 
-        function updateCountdown() {
-
-            /*
-             * If the booking is already open, immediately
-             * send the visitor to /booking/.
-             */
-            if (isBookingOpen()) {
-
-                window.location.replace("../slot-booking/");
-
-                return;
-            }
+        /*
+         * Difference in milliseconds.
+         */
+        const difference =
+            target.getTime() - now.getTime();
 
 
-            /*
-             * Get the next opening time.
-             */
-            const target = getNextOpeningDate();
-
-
-            /*
-             * Get current India time.
-             */
-            const now = getIndiaNowAsUTC();
-
-
-            /*
-             * Difference in milliseconds.
-             */
-            const difference =
-                target.getTime() - now.getTime();
-
-
-            /*
-             * Convert milliseconds into:
-             *
-             * hours
-             * minutes
-             * seconds
-             */
-            const totalSeconds =
-                Math.max(
-                    0,
-                    Math.floor(difference / 1000)
-                );
-
-
-            const hours =
-                Math.floor(totalSeconds / 3600);
-
-            const minutes =
-                Math.floor(
-                    (totalSeconds % 3600) / 60
-                );
-
-            const seconds =
-                totalSeconds % 60;
-
-
-            /*
-             * Format with leading zeroes.
-             */
-            const formattedHours =
-                String(hours).padStart(2, "0");
-
-            const formattedMinutes =
-                String(minutes).padStart(2, "0");
-
-            const formattedSeconds =
-                String(seconds).padStart(2, "0");
-
+        /*
+         * Once the configured opening time is reached,
+         * DO NOT redirect anywhere.
+         *
+         * Keep the visitor on the curtain page.
+         */
+        if (difference <= 0) {
 
             countdownElement.textContent =
-                `${formattedHours}h ` +
-                `${formattedMinutes}m ` +
-                `${formattedSeconds}s`;
+                "00h 00m 00s";
+
+            return;
         }
 
 
         /*
-         * Update immediately.
+         * Convert milliseconds into seconds.
          */
-        updateCountdown();
+        const totalSeconds =
+            Math.max(
+                0,
+                Math.floor(difference / 1000)
+            );
+
+
+        const hours =
+            Math.floor(totalSeconds / 3600);
+
+        const minutes =
+            Math.floor(
+                (totalSeconds % 3600) / 60
+            );
+
+        const seconds =
+            totalSeconds % 60;
 
 
         /*
-         * Update once every second.
+         * Format with leading zeroes.
          */
-        setInterval(updateCountdown, 1000);
-    </script>
+        const formattedHours =
+            String(hours).padStart(2, "0");
+
+        const formattedMinutes =
+            String(minutes).padStart(2, "0");
+
+        const formattedSeconds =
+            String(seconds).padStart(2, "0");
+
+
+        countdownElement.textContent =
+            `${formattedHours}h ` +
+            `${formattedMinutes}m ` +
+            `${formattedSeconds}s`;
+    }
+
+
+    /*
+     * Update immediately.
+     */
+    updateCountdown();
+
+
+    /*
+     * Update every second.
+     */
+    setInterval(updateCountdown, 1000);
+</script>
 
 </body>
 </html>
