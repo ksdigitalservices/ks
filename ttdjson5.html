@@ -421,14 +421,20 @@
      */
     function isValidAadhaar(aadhaar) {
 
+      /*
+       * Aadhaar must:
+       * 1. Contain exactly 12 digits.
+       * 2. Start with a digit from 2 to 9.
+       * 3. Pass the Verhoeff checksum.
+       */
       if (!/^\d{12}$/.test(aadhaar)) {
         return false;
       }
 
-      /*
-       * Aadhaar numbers are 12 digits.
-       * The Verhoeff checksum must evaluate to 0.
-       */
+      if (!/^[2-9]/.test(aadhaar)) {
+        return false;
+      }
+
       let checksum = 0;
 
       const digits =
@@ -724,6 +730,9 @@
           "\\d{12}";
 
         // Create an inline validation message.
+        // The input is not attached to the DOM yet, so the
+        // message is stored on the element and appended later
+        // by addRow().
         const errorMessage =
           document.createElement("div");
 
@@ -736,10 +745,8 @@
         errorMessage.style.display =
           "none";
 
-        // Put the message directly below the Aadhaar input.
-        element.parentElement.appendChild(
-          errorMessage
-        );
+        element._aadharErrorMessage =
+          errorMessage;
 
 
         function validateAadhaarInput() {
@@ -1057,6 +1064,19 @@
         row.appendChild(label);
 
         row.appendChild(input);
+
+        // Aadhaar validation message must be added only after
+        // the input has been attached to the DOM.
+        if (
+          field === "aadhar" &&
+          input._aadharErrorMessage
+        ) {
+
+          row.appendChild(
+            input._aadharErrorMessage
+          );
+
+        }
 
         body.appendChild(row);
 
