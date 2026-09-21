@@ -12,7 +12,7 @@
       padding: 0;
       font-family: Arial, sans-serif;
     }
- 
+
     body {
       background: #f4f6f9;
       padding: 20px;
@@ -63,6 +63,74 @@
     .download-btn {
       background: #059669;
       color: white;
+    }
+
+    .preview-btn {
+      background: #7c3aed;
+      color: white;
+    }
+
+    .preview-panel {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: #f8fafc;
+      padding: 16px;
+    }
+
+    .preview-title {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 14px;
+      color: #111827;
+    }
+
+    .preview-phone {
+      margin-bottom: 12px;
+      padding: 9px 12px;
+      border-radius: 6px;
+      background: #eef2ff;
+      color: #1f2937;
+      font-weight: bold;
+    }
+
+    .preview-person {
+      display: grid;
+      grid-template-columns: 45px minmax(150px, 1.5fr) 70px 100px minmax(160px, 1.5fr);
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 9px 10px;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .preview-person-index {
+      font-weight: bold;
+      color: #374151;
+      text-align: center;
+    }
+
+    .preview-value {
+      color: #111827;
+      word-break: break-word;
+    }
+
+    .preview-empty {
+      color: #6b7280;
+      text-align: center;
+      padding: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .preview-person {
+        grid-template-columns: 30px 1fr 55px 75px 1fr;
+        gap: 6px;
+        font-size: 12px;
+      }
     }
 
     /* ============================================================
@@ -258,7 +326,10 @@
 <button class="add-btn" onclick="addPerson()">
         Add Person
       </button>
-<button class="download-btn" onclick="downloadJSON()">
+<button class="preview-btn" onclick="previewDetails()">
+        Preview
+      </button>
+      <button class="download-btn" onclick="downloadJSON()">
         Download JSON
       </button>
 </div>
@@ -266,7 +337,13 @@
          PEOPLE CONTAINER
          ============================================================ -->
 <div class="people-container" id="peopleContainer"></div>
-<div class="note">
+
+    <div class="preview-panel" id="previewPanel">
+      <div class="preview-title">Entered Details Preview</div>
+      <div id="previewContent"></div>
+    </div>
+
+    <div class="note">
       Maximum allowed entries: 6 people.
     </div>
 </div>
@@ -1399,6 +1476,171 @@
 
 
       return result;
+
+    }
+
+
+    // ============================================================
+    // PREVIEW ENTERED DETAILS
+    // ============================================================
+
+    /*
+     * Display-only preview.
+     *
+     * Each person is displayed on ONE row:
+     *
+     * S.No | Name | Age | Gender | Aadhaar Number
+     *
+     * No Person 1 / Name / Age / Gender / Aadhaar headings
+     * are displayed inside the individual rows.
+     *
+     * JSON creation logic is not changed.
+     */
+    function previewDetails() {
+
+      const cards =
+        document.querySelectorAll(
+          ".person-card"
+        );
+
+      const previewPanel =
+        document.getElementById(
+          "previewPanel"
+        );
+
+      const previewContent =
+        document.getElementById(
+          "previewContent"
+        );
+
+      if (!cards.length) {
+
+        previewContent.innerHTML =
+          '<div class="preview-empty">No details entered.</div>';
+
+        previewPanel.style.display =
+          "block";
+
+        return;
+      }
+
+      let html = "";
+
+      /*
+       * Phone number is displayed once above
+       * the person rows.
+       */
+      const firstPhone =
+        cards[0].querySelector(
+          '[data-field="phone"]'
+        );
+
+      if (firstPhone) {
+
+        html +=
+          '<div class="preview-phone">' +
+          escapePreviewHtml(
+            firstPhone.value.trim() || "-"
+          ) +
+          '</div>';
+
+      }
+
+
+      cards.forEach(
+        (card, index) => {
+
+          const getValue =
+            field => {
+
+              const input =
+                card.querySelector(
+                  `[data-field="${field}"]`
+                );
+
+              return input
+                ? input.value.trim()
+                : "";
+            };
+
+
+          const name =
+            getValue("name");
+
+          const age =
+            getValue("age");
+
+          const gender =
+            getValue("gender");
+
+          const aadhar =
+            getValue("aadhar");
+
+
+          html +=
+            '<div class="preview-person">' +
+
+              '<div class="preview-person-index">' +
+                (index + 1) +
+              '</div>' +
+
+              '<div class="preview-value">' +
+                escapePreviewHtml(
+                  name || "-"
+                ) +
+              '</div>' +
+
+              '<div class="preview-value">' +
+                escapePreviewHtml(
+                  age || "-"
+                ) +
+              '</div>' +
+
+              '<div class="preview-value">' +
+                escapePreviewHtml(
+                  gender || "-"
+                ) +
+              '</div>' +
+
+              '<div class="preview-value">' +
+                escapePreviewHtml(
+                  aadhar || "-"
+                ) +
+              '</div>' +
+
+            '</div>';
+
+        }
+      );
+
+
+      previewContent.innerHTML =
+        html;
+
+      previewPanel.style.display =
+        "block";
+
+
+      previewPanel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
+
+
+    /*
+     * Escape values before putting form data into
+     * preview HTML.
+     */
+    function escapePreviewHtml(value) {
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
     }
 
