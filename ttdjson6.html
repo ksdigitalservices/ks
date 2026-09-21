@@ -95,6 +95,10 @@
       font-weight: bold;
     }
 
+    .preview-phone-label {
+      font-weight: bold;
+    }
+
     .preview-person {
       display: grid;
       grid-template-columns: 45px minmax(150px, 1.5fr) 70px 100px minmax(160px, 1.5fr);
@@ -1539,6 +1543,7 @@
 
         html +=
           '<div class="preview-phone">' +
+          '<span class="preview-phone-label">PHONE NUMBER FOR OTP:</span> ' +
           escapePreviewHtml(
             firstPhone.value.trim() || "-"
           ) +
