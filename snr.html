@@ -1,0 +1,1924 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Form Generator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      padding: 20px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .add-btn {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .download-btn {
+      background: #059669;
+      color: white;
+    }
+
+    /* ============================================================
+       FILE NAME
+       ============================================================ */
+
+    .filename-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filename-label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    #fileName {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      font-size: 13px;
+      background: white;
+    }
+
+    #fileName:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+
+
+    /* ============================================================
+       CATEGORY / SUBCATEGORY
+       ============================================================ */
+
+    .category-section {
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: #ffffff;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .category-header {
+      background: #111827;
+      color: white;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .category-body {
+      padding: 14px;
+    }
+
+    .category-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      min-height: 48px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .category-row:last-child {
+      border-bottom: none;
+    }
+
+    .category-label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #374151;
+      padding-right: 15px;
+    }
+
+    .category-notes {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 12px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .category-notes ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    @media (max-width: 600px) {
+      .category-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 9px 0;
+      }
+
+      .category-label {
+        padding-right: 0;
+      }
+    }
+
+    /* ============================================================
+       PEOPLE
+       ============================================================ */
+
+    .people-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .person-card {
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .person-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111827;
+      color: white;
+      padding: 10px 14px;
+    }
+
+    .person-title {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      background: #dc2626;
+      color: white;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .person-body {
+      padding: 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      min-height: 48px;
+    }
+
+    .form-row:last-child {
+      border-bottom: none;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #374151;
+      padding-right: 15px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      font-size: 13px;
+      background: white;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+
+    .error {
+      border: 1px solid red !important;
+      background: #fff5f5;
+    }
+
+    .note {
+      margin-top: 15px;
+      color: #555;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 12px;
+      }
+
+      .top-bar {
+        flex-direction: column;
+      }
+
+      .top-bar button {
+        width: 100%;
+      }
+
+      .filename-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 9px 0;
+      }
+
+      .form-label {
+        padding-right: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>Dynamic JSON Form Generator</h1>
+
+    <!-- ============================================================
+         CATEGORY / SUBCATEGORY
+         ============================================================ -->
+
+    <div class="category-section">
+
+      <div class="category-header">
+        Category / Subcategory
+      </div>
+
+      <div class="category-body">
+
+        <div class="category-row">
+          <div class="category-label">Category</div>
+          <select id="category">
+            <option value="">Select Category</option>
+            <option value="Senior Citizen">Senior Citizen</option>
+            <option value="Medical Cases">Medical Cases</option>
+            <option value="Differently Abled">Differently Abled</option>
+          </select>
+        </div>
+
+        <div id="seniorCitizenFields" style="display:none;">
+
+          <div class="category-row">
+            <div class="category-label">Age</div>
+            <input type="number" id="categoryAge" min="0">
+          </div>
+
+          <div class="category-row">
+            <div class="category-label">Accompany with the Spouse</div>
+            <select id="seniorSpouse">
+              <option value="">Select</option>
+              <option value="YES">YES</option>
+              <option value="NO">NO</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div id="medicalFields" style="display:none;">
+
+          <div class="category-row">
+            <div class="category-label">Medical Reason</div>
+            <select id="medicalReason">
+              <option value="">Select Medical Reason</option>
+              <option value="Kidney Transplantation">Kidney Transplantation</option>
+              <option value="Open Heart Surgery">Open Heart Surgery</option>
+              <option value="Dialysis">Dialysis</option>
+              <option value="Liver Transplantation">Liver Transplantation</option>
+              <option value="Brain Surgery">Brain Surgery</option>
+              <option value="Cancer">Cancer</option>
+              <option value="Spine Surgery (Unable to Walk)">Spine Surgery (Unable to Walk)</option>
+            </select>
+          </div>
+
+          <div class="category-row">
+            <div class="category-label">Accompany with the Spouse</div>
+            <select id="medicalSpouse">
+              <option value="">Select</option>
+              <option value="YES">YES</option>
+              <option value="NO">NO</option>
+            </select>
+          </div>
+
+          <div class="category-notes" id="medicalNotes">
+            Medical case details will be handled according to the selected medical reason.
+          </div>
+
+        </div>
+
+        <div id="differentlyAbledFields" style="display:none;">
+
+          <div class="category-row">
+            <div class="category-label">Enter disability</div>
+            <input type="text" id="disability" maxlength="20" autocomplete="off">
+          </div>
+
+          <div class="category-row">
+            <div class="category-label">Enter percentage</div>
+            <input type="number" id="disabilityPercentage" min="0" max="100">
+          </div>
+
+          <div class="category-row">
+            <div class="category-label">Accompany with the Spouse</div>
+            <select id="differentlyAbledSpouse">
+              <option value="">Select</option>
+              <option value="YES">YES</option>
+              <option value="NO">NO</option>
+            </select>
+          </div>
+
+          <div class="category-notes" id="differentlyAbledNotes">
+            <ul>
+              <li>Pilgrims having the disability percent more than 20% are only allowed.</li>
+              <li>The Differently Abled certificate provided by State Government(s) or Central Government of India should be uploaded.</li>
+              <li>Uploaded certificate(s) will be validated scrupulously while reporting to darshan. If any deviations are identified, pilgrims will not be allowed for darshan under any circumstances.</li>
+              <li>Only spouse is allowed as an attendant.</li>
+              <li>TTD management is authorized to cancel the booking tickets if found any discrepancy.</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         FILE NAME
+         ============================================================ -->
+
+    <div class="filename-row">
+
+      <div class="filename-label">
+        File Name
+      </div>
+
+      <input type="text" id="fileName" placeholder="Enter file name" autocomplete="off">
+
+    </div>
+
+
+    <!-- ============================================================
+         TOP BUTTONS
+         ============================================================ -->
+
+    <div class="top-bar">
+
+      <button class="add-btn" onclick="addPerson()">
+        Add Person
+      </button>
+
+      <button class="download-btn" onclick="downloadJSON()">
+        Download JSON
+      </button>
+
+    </div>
+
+
+    <!-- ============================================================
+         PEOPLE CONTAINER
+         ============================================================ -->
+
+    <div id="peopleContainer" class="people-container"><div class="person-card"><div class="person-header"><div class="person-title">Person 1</div><button class="remove-btn">Remove</button></div><div class="person-body"><div class="form-row"><div class="form-label">SerialNumber</div><input type="text" data-field="serialNumber"></div><div class="form-row"><div class="form-label">Phone</div><input type="tel" inputmode="numeric" data-field="phone"></div><div class="form-row"><div class="form-label">Date</div><input type="text" data-field="date"></div><div class="form-row"><div class="form-label">People</div><input type="number" data-field="people"></div><div class="form-row"><div class="form-label">Time</div><input type="text" data-field="time"></div><div class="form-row"><div class="form-label">Name</div><input type="text" data-field="name"></div><div class="form-row"><div class="form-label">Age</div><input type="number" data-field="age"></div><div class="form-row"><div class="form-label">Gender</div><select data-field="gender"><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div><div class="form-row"><div class="form-label">Aadhar</div><input type="text" data-field="aadhar" inputmode="numeric" pattern="\d{12}"></div><div class="form-row"><div class="form-label">Email</div><input type="email" data-field="email"></div><div class="form-row"><div class="form-label">City</div><input type="text" data-field="city"></div><div class="form-row"><div class="form-label">State</div><input type="text" data-field="state"></div><div class="form-row"><div class="form-label">Country</div><input type="text" data-field="country"></div><div class="form-row"><div class="form-label">Pincode</div><input type="number" data-field="pincode" maxlength="6"></div><div class="form-row"><div class="form-label">Gotram</div><input type="text" data-field="gotram"></div><div class="form-row"><div class="form-label">Upi</div><input type="text" data-field="upi"></div></div></div></div>
+
+
+    <div class="note">
+      Maximum allowed entries: 6 people.
+    </div>
+
+  </div>
+
+
+  <script>
+
+    // ============================================================
+    // SAMPLE JSON STRUCTURE
+    // ============================================================
+
+    const sampleData = [
+      {
+        "serialNumber": "",
+        "phone": "",
+        "date": "",
+        "people": "",
+        "time": "1600",
+        "name": "",
+        "age": "",
+        "gender": "Male",
+        "aadhar": "",
+        "email": "",
+        "city": "Hyderabad",
+        "state": "Telangana",
+        "country": "India",
+        "pincode": "500040",
+        "gotram": "",
+        "upi": ""
+      }
+    ];
+
+
+    const MAX_PEOPLE = 6;
+
+
+    // Remove unwanted keys
+    const excludedKeys = ["undefined"];
+
+
+    const fields =
+      Object.keys(sampleData[0]).filter(
+        key => !excludedKeys.includes(key)
+      );
+
+
+    // ============================================================
+    // FORMAT LABEL
+    // ============================================================
+
+    function formatLabel(key) {
+
+      return key
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, char => char.toUpperCase());
+
+    }
+
+
+    // ============================================================
+    // UPDATE FILE NAME FROM PERSON 1
+    // ============================================================
+
+    function updateFileNameFromPerson1() {
+
+      const firstPerson =
+        document.querySelector(".person-card");
+
+      const fileNameInput =
+        document.getElementById("fileName");
+
+
+      if (!firstPerson || !fileNameInput) {
+        return;
+      }
+
+
+      const nameInput =
+        firstPerson.querySelector(
+          'input[data-field="name"]'
+        );
+
+
+      if (!nameInput) {
+        return;
+      }
+
+
+      /*
+       * Automatically update the filename only
+       * until the user manually edits it.
+       */
+
+      if (
+        !fileNameInput.dataset.manuallyEdited
+      ) {
+
+        fileNameInput.value =
+          nameInput.value.trim();
+
+      }
+
+    }
+
+
+    // ============================================================
+    // CREATE INPUT
+    // ============================================================
+
+    function createInput(field, value = "") {
+
+      let element;
+
+
+      // ==========================================================
+      // GENDER DROPDOWN
+      // ==========================================================
+
+      if (field === "gender") {
+
+        element =
+          document.createElement("select");
+
+
+        const options = [
+          "",
+          "Male",
+          "Female",
+          "Other"
+        ];
+
+
+        options.forEach(optionValue => {
+
+          const option =
+            document.createElement("option");
+
+
+          option.value =
+            optionValue;
+
+
+          option.textContent =
+            optionValue || "Select";
+
+
+          if (optionValue === value) {
+
+            option.selected = true;
+
+          }
+
+
+          element.appendChild(option);
+
+        });
+
+
+      } else {
+
+        element =
+          document.createElement("input");
+
+
+        // ========================================================
+        // PHONE NUMBER
+        // ========================================================
+
+        if (field === "phone") {
+
+          element.type = "tel";
+
+          element.inputMode = "numeric";
+
+          /*
+           * Do not use maxlength here either.
+           * The value is cleaned first and then
+           * limited to 10 digits.
+           */
+
+        }
+
+
+        // ========================================================
+        // EMAIL
+        // ========================================================
+
+        else if (field === "email") {
+
+          element.type = "email";
+
+        }
+
+
+        // ========================================================
+        // AGE / PEOPLE / PINCODE
+        // ========================================================
+
+        else if (
+          ["age", "people", "pincode"]
+            .includes(field)
+        ) {
+
+          element.type = "number";
+
+        }
+
+
+        // ========================================================
+        // EVERYTHING ELSE
+        // ========================================================
+
+        else {
+
+          element.type = "text";
+
+        }
+
+
+        element.value =
+          value || "";
+
+      }
+
+
+      // Store field name
+      element.dataset.field =
+        field;
+
+
+      // ==========================================================
+      // NAME VALIDATION
+      // ==========================================================
+
+      if (field === "name") {
+
+        /*
+         * Only alphabets and spaces are allowed.
+         *
+         * Examples:
+         *
+         * "Ramesh Kumar"      -> Ramesh Kumar
+         * " Ramesh Kumar "    -> Ramesh Kumar
+         * "Ramesh.Kumar"      -> RameshKumar
+         * "Ramesh123 Kumar"   -> Ramesh Kumar
+         * "Ramesh@Kumar"      -> RameshKumar
+         */
+
+        element.addEventListener(
+          "input",
+          () => {
+
+            let cleaned =
+              element.value.replace(
+                /[^a-zA-Z ]/g,
+                ""
+              );
+
+
+            /*
+             * Convert multiple spaces
+             * into one space.
+             */
+
+            cleaned =
+              cleaned.replace(
+                /\s+/g,
+                " "
+              );
+
+
+            /*
+             * Remove leading spaces.
+             */
+
+            cleaned =
+              cleaned.replace(
+                /^\s+/,
+                ""
+              );
+
+
+            element.value =
+              cleaned;
+
+
+            /*
+             * Person 1 name automatically
+             * updates the filename.
+             */
+
+            const firstCard =
+              document.querySelector(
+                ".person-card"
+              );
+
+
+            const currentCard =
+              element.closest(
+                ".person-card"
+              );
+
+
+            if (
+              firstCard &&
+              currentCard === firstCard
+            ) {
+
+              updateFileNameFromPerson1();
+
+            }
+
+          }
+        );
+
+
+        /*
+         * Final trim when leaving the field.
+         */
+
+        element.addEventListener(
+          "blur",
+          () => {
+
+            element.value =
+              element.value.trim();
+
+
+            const firstCard =
+              document.querySelector(
+                ".person-card"
+              );
+
+
+            const currentCard =
+              element.closest(
+                ".person-card"
+              );
+
+
+            if (
+              firstCard &&
+              currentCard === firstCard
+            ) {
+
+              updateFileNameFromPerson1();
+
+            }
+
+          }
+        );
+
+      }
+
+
+      // ==========================================================
+      // AADHAAR VALIDATION
+      // ==========================================================
+
+      if (field === "aadhar") {
+
+        /*
+         * IMPORTANT:
+         *
+         * Do NOT set maxLength = 12 here.
+         *
+         * Browser maxlength can truncate a pasted
+         * value such as:
+         *
+         * 1234 1234 1234
+         *
+         * before the input event has processed it.
+         *
+         * We therefore clean the complete value first
+         * and then limit it to 12 digits.
+         */
+
+        element.inputMode = "numeric";
+
+        element.pattern =
+          "\\d{12}";
+
+
+        element.addEventListener(
+          "input",
+          () => {
+
+            /*
+             * Remove everything except digits.
+             *
+             * 1234 1234 1234
+             *        ↓
+             * 123412341234
+             */
+
+            let cleaned =
+              element.value.replace(
+                /\D/g,
+                ""
+              );
+
+
+            /*
+             * After removing spaces/non-digits,
+             * keep exactly the first 12 digits.
+             */
+
+            cleaned =
+              cleaned.substring(
+                0,
+                12
+              );
+
+
+            element.value =
+              cleaned;
+
+          }
+        );
+
+      }
+
+
+      // ==========================================================
+      // PHONE NUMBER VALIDATION
+      // ==========================================================
+
+      if (field === "phone") {
+
+        element.addEventListener(
+          "input",
+          () => {
+
+            /*
+             * Allow digits only.
+             */
+
+            let cleaned =
+              element.value.replace(
+                /\D/g,
+                ""
+              );
+
+
+            /*
+             * Keep maximum 10 digits.
+             */
+
+            cleaned =
+              cleaned.substring(
+                0,
+                10
+              );
+
+
+            element.value =
+              cleaned;
+
+          }
+        );
+
+      }
+
+
+      // ==========================================================
+      // PINCODE
+      // ==========================================================
+
+      if (field === "pincode") {
+
+        element.maxLength = 6;
+
+      }
+
+
+      return element;
+
+    }
+
+
+    // ============================================================
+    // ADD PERSON CARD
+    // ============================================================
+
+    function addRow(data = {}) {
+
+      const container =
+        document.getElementById(
+          "peopleContainer"
+        );
+
+
+      // Maximum limit
+      if (
+        container.children.length >=
+        MAX_PEOPLE
+      ) {
+
+        alert(
+          "Maximum limit reached. Only 6 people allowed."
+        );
+
+        return;
+
+      }
+
+
+      const personNumber =
+        container.children.length + 1;
+
+
+      // ==========================================================
+      // MAIN CARD
+      // ==========================================================
+
+      const card =
+        document.createElement("div");
+
+
+      card.className =
+        "person-card";
+
+
+      // ==========================================================
+      // HEADER
+      // ==========================================================
+
+      const header =
+        document.createElement("div");
+
+
+      header.className =
+        "person-header";
+
+
+      const title =
+        document.createElement("div");
+
+
+      title.className =
+        "person-title";
+
+
+      title.textContent =
+        "Person " +
+        personNumber;
+
+
+      // ==========================================================
+      // REMOVE BUTTON
+      // ==========================================================
+
+      const removeBtn =
+        document.createElement("button");
+
+
+      removeBtn.textContent =
+        "Remove";
+
+
+      removeBtn.className =
+        "remove-btn";
+
+
+      removeBtn.onclick = () => {
+
+        card.remove();
+
+        updatePersonNumbers();
+
+
+        /*
+         * After removing Person 1,
+         * the new Person 1 becomes the
+         * filename source.
+         */
+
+        const fileNameInput =
+          document.getElementById(
+            "fileName"
+          );
+
+
+        if (fileNameInput) {
+
+          delete fileNameInput.dataset
+            .manuallyEdited;
+
+          updateFileNameFromPerson1();
+
+        }
+
+      };
+
+
+      header.appendChild(title);
+
+      header.appendChild(removeBtn);
+
+
+      // ==========================================================
+      // BODY
+      // ==========================================================
+
+      const body =
+        document.createElement("div");
+
+
+      body.className =
+        "person-body";
+
+
+      /*
+       * Person 1:
+       * All fields including Serial Number
+       * and Phone Number.
+       *
+       * Persons 2-6:
+       * Name, Age, Gender and Aadhaar only.
+       */
+
+      const personFields =
+        personNumber === 1
+          ? fields
+          : [
+              "name",
+              "age",
+              "gender",
+              "aadhar"
+            ];
+
+
+      personFields.forEach(field => {
+
+        const row =
+          document.createElement("div");
+
+
+        row.className =
+          "form-row";
+
+
+        // ========================================================
+        // LABEL
+        // ========================================================
+
+        const label =
+          document.createElement("div");
+
+
+        label.className =
+          "form-label";
+
+
+        label.textContent =
+          formatLabel(field);
+
+
+        // ========================================================
+        // INPUT
+        // ========================================================
+
+        const input =
+          createInput(
+            field,
+            data[field]
+          );
+
+
+        row.appendChild(label);
+
+        row.appendChild(input);
+
+        body.appendChild(row);
+
+      });
+
+
+      card.appendChild(header);
+
+      card.appendChild(body);
+
+      container.appendChild(card);
+
+
+      /*
+       * Set initial filename from Person 1.
+       */
+
+      if (
+        personNumber === 1
+      ) {
+
+        updateFileNameFromPerson1();
+
+      }
+
+    }
+
+
+    // ============================================================
+    // ADD PERSON
+    // ============================================================
+
+    function addPerson() {
+
+      addRow({});
+
+    }
+
+
+    // ============================================================
+    // UPDATE PERSON NUMBERS
+    // ============================================================
+
+    function updatePersonNumbers() {
+
+      const cards =
+        document.querySelectorAll(
+          ".person-card"
+        );
+
+
+      cards.forEach(
+        (card, index) => {
+
+          const title =
+            card.querySelector(
+              ".person-title"
+            );
+
+
+          title.textContent =
+            "Person " +
+            (index + 1);
+
+        }
+      );
+
+    }
+
+
+    // ============================================================
+    // VALIDATE ROW
+    // ============================================================
+
+    function validateRow(rowData) {
+
+      let valid = true;
+
+
+      // ==========================================================
+      // NAME
+      // ==========================================================
+
+      if (
+        typeof rowData.name ===
+        "string"
+      ) {
+
+        rowData.name =
+          rowData.name.trim();
+
+      }
+
+
+      /*
+       * Name must contain:
+       *
+       * - Alphabets
+       * - Single spaces between words
+       *
+       * No numbers or special characters.
+       */
+
+      if (
+        !rowData.name ||
+        !/^[A-Za-z]+(?: [A-Za-z]+)*$/.test(
+          rowData.name
+        )
+      ) {
+
+        valid = false;
+
+      }
+
+
+      // ==========================================================
+      // PHONE
+      // ==========================================================
+
+      if (
+        rowData.phone &&
+        !/^\d{10}$/.test(
+          rowData.phone
+        )
+      ) {
+
+        valid = false;
+
+      }
+
+
+      // ==========================================================
+      // EMAIL
+      // ==========================================================
+
+      if (
+        rowData.email &&
+        !/^\S+@\S+\.\S+$/.test(
+          rowData.email
+        )
+      ) {
+
+        valid = false;
+
+      }
+
+
+      // ==========================================================
+      // AADHAAR
+      // ==========================================================
+
+      /*
+       * Aadhaar must contain exactly
+       * 12 digits.
+       */
+
+      if (
+        rowData.aadhar &&
+        !/^\d{12}$/.test(
+          rowData.aadhar
+        )
+      ) {
+
+        valid = false;
+
+      }
+
+
+      return valid;
+
+    }
+
+
+    // ============================================================
+    // COLLECT DATA
+    // ============================================================
+
+    function collectData() {
+
+      const cards =
+        document.querySelectorAll(
+          ".person-card"
+        );
+
+
+      const result = [];
+
+
+      cards.forEach(card => {
+
+        const obj = {};
+
+
+        card
+          .querySelectorAll(
+            "input, select"
+          )
+          .forEach(input => {
+
+            let value =
+              input.value;
+
+
+            // ==================================================
+            // NAME
+            // ==================================================
+
+            if (
+              input.dataset.field ===
+              "name"
+            ) {
+
+              /*
+               * Remove invalid characters.
+               */
+
+              value =
+                value.replace(
+                  /[^a-zA-Z ]/g,
+                  ""
+                );
+
+
+              /*
+               * Convert multiple spaces
+               * into one.
+               */
+
+              value =
+                value.replace(
+                  /\s+/g,
+                  " "
+                );
+
+
+              /*
+               * Trim leading/trailing spaces.
+               */
+
+              value =
+                value.trim();
+
+
+              input.value =
+                value;
+
+            }
+
+
+            // ==================================================
+            // AADHAAR
+            // ==================================================
+
+            if (
+              input.dataset.field ===
+              "aadhar"
+            ) {
+
+              /*
+               * Remove everything except
+               * digits.
+               */
+
+              value =
+                value.replace(
+                  /\D/g,
+                  ""
+                );
+
+
+              /*
+               * Keep only 12 digits.
+               */
+
+              value =
+                value.substring(
+                  0,
+                  12
+                );
+
+
+              input.value =
+                value;
+
+            }
+
+
+            // ==================================================
+            // PHONE
+            // ==================================================
+
+            if (
+              input.dataset.field ===
+              "phone"
+            ) {
+
+              value =
+                value.replace(
+                  /\D/g,
+                  ""
+                );
+
+
+              value =
+                value.substring(
+                  0,
+                  10
+                );
+
+
+              input.value =
+                value;
+
+            }
+
+
+            obj[
+              input.dataset.field
+            ] = value;
+
+          });
+
+
+        result.push(obj);
+
+      });
+
+
+      return result;
+
+    }
+
+
+
+    // ============================================================
+    // CATEGORY UI / DATA
+    // ============================================================
+
+    function updateCategoryFields() {
+
+      const category =
+        document.getElementById("category").value;
+
+      const senior =
+        document.getElementById("seniorCitizenFields");
+
+      const medical =
+        document.getElementById("medicalFields");
+
+      const differentlyAbled =
+        document.getElementById("differentlyAbledFields");
+
+      const medicalNotes =
+        document.getElementById("medicalNotes");
+
+      const differentlyAbledNotes =
+        document.getElementById("differentlyAbledNotes");
+
+      senior.style.display =
+        category === "Senior Citizen" ? "block" : "none";
+
+      medical.style.display =
+        category === "Medical Cases" ? "block" : "none";
+
+      differentlyAbled.style.display =
+        category === "Differently Abled" ? "block" : "none";
+
+      medicalNotes.style.display =
+        category === "Medical Cases" ? "block" : "none";
+
+      differentlyAbledNotes.style.display =
+        category === "Differently Abled" ? "block" : "none";
+
+      if (category !== "Senior Citizen") {
+        document.getElementById("categoryAge").value = "";
+        document.getElementById("seniorSpouse").value = "";
+      }
+
+      if (category !== "Medical Cases") {
+        document.getElementById("medicalReason").value = "";
+        document.getElementById("medicalSpouse").value = "";
+      }
+
+      if (category !== "Differently Abled") {
+        document.getElementById("disability").value = "";
+        document.getElementById("disabilityPercentage").value = "";
+        document.getElementById("differentlyAbledSpouse").value = "";
+      }
+    }
+
+
+    function collectCategoryData() {
+
+      const category =
+        document.getElementById("category").value;
+
+      const result = {
+        category: category,
+        subcategory: "",
+        categoryDetails: {}
+      };
+
+      if (category === "Senior Citizen") {
+
+        result.subcategory =
+          "Senior Citizen";
+
+        result.categoryDetails = {
+          age: document.getElementById("categoryAge").value,
+          accompanyWithSpouse: document.getElementById("seniorSpouse").value
+        };
+
+      } else if (category === "Medical Cases") {
+
+        result.subcategory =
+          document.getElementById("medicalReason").value;
+
+        result.categoryDetails = {
+          medicalReason: document.getElementById("medicalReason").value,
+          accompanyWithSpouse: document.getElementById("medicalSpouse").value
+        };
+
+      } else if (category === "Differently Abled") {
+
+        result.subcategory =
+          document.getElementById("disability").value.trim();
+
+        result.categoryDetails = {
+          disability: document.getElementById("disability").value.trim(),
+          percentage: document.getElementById("disabilityPercentage").value,
+          accompanyWithSpouse: document.getElementById("differentlyAbledSpouse").value
+        };
+
+      }
+
+      return result;
+    }
+
+
+    function validateCategoryData(categoryData) {
+
+      const category =
+        categoryData.category;
+
+      if (!category) {
+
+        alert("Please select a Category.");
+
+        return false;
+      }
+
+      if (category === "Senior Citizen") {
+
+        const age =
+          categoryData.categoryDetails.age;
+
+        const spouse =
+          categoryData.categoryDetails.accompanyWithSpouse;
+
+        if (!age || !spouse) {
+
+          alert(
+            "For Senior Citizen, please enter Age and select Accompany with the Spouse."
+          );
+
+          return false;
+        }
+
+      } else if (category === "Medical Cases") {
+
+        const reason =
+          categoryData.categoryDetails.medicalReason;
+
+        const spouse =
+          categoryData.categoryDetails.accompanyWithSpouse;
+
+        if (!reason || !spouse) {
+
+          alert(
+            "For Medical Cases, please select Medical Reason and Accompany with the Spouse."
+          );
+
+          return false;
+        }
+
+      } else if (category === "Differently Abled") {
+
+        const disability =
+          categoryData.categoryDetails.disability;
+
+        const percentage =
+          categoryData.categoryDetails.percentage;
+
+        const spouse =
+          categoryData.categoryDetails.accompanyWithSpouse;
+
+        const numericPercentage =
+          Number(percentage);
+
+        if (!disability || !percentage || !spouse) {
+
+          alert(
+            "For Differently Abled, please enter Disability, Percentage and select Accompany with the Spouse."
+          );
+
+          return false;
+        }
+
+        if (disability.length > 20) {
+
+          alert(
+            "Disability must not exceed 20 characters."
+          );
+
+          return false;
+        }
+
+        if (
+          numericPercentage < 0 ||
+          numericPercentage > 100
+        ) {
+
+          alert(
+            "Percentage must be between 0 and 100."
+          );
+
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+
+    // ============================================================
+    // DOWNLOAD JSON
+    // ============================================================
+
+    function downloadJSON() {
+
+      const data =
+        collectData();
+
+      const categoryData =
+        collectCategoryData();
+
+
+      // ==========================================================
+      // CATEGORY VALIDATION
+      // ==========================================================
+
+      if (
+        data.length === 0
+      ) {
+
+        alert(
+          "Please add at least one person."
+        );
+
+        return;
+
+      }
+
+
+      // ==========================================================
+      // VALIDATION
+      // ==========================================================
+
+      for (
+        let i = 0;
+        i < data.length;
+        i++
+      ) {
+
+        const row =
+          data[i];
+
+
+        if (
+          !validateRow(row)
+        ) {
+
+          alert(
+            `Validation failed for Person ${i + 1}. ` +
+            `Check name, phone, email, or Aadhaar.`
+          );
+
+          return;
+
+        }
+
+      }
+
+
+      // ==========================================================
+      // FILE NAME
+      // ==========================================================
+
+      const fileNameInput =
+        document.getElementById(
+          "fileName"
+        );
+
+
+      let fileName =
+        fileNameInput.value.trim();
+
+
+      /*
+       * If filename is empty,
+       * use Person 1 name.
+       */
+
+      if (!fileName) {
+
+        fileName =
+          data[0]?.name?.trim() ||
+          "people-data";
+
+      }
+
+
+      /*
+       * Remove invalid filename characters.
+       */
+
+      fileName =
+        fileName.replace(
+          /[<>:"/\\|?*\x00-\x1F]/g,
+          ""
+        );
+
+
+      fileName =
+        fileName.trim();
+
+
+      /*
+       * Prevent empty filename.
+       */
+
+      if (!fileName) {
+
+        fileName =
+          "people-data";
+
+      }
+
+
+      /*
+       * Prevent duplicate .json extension.
+       */
+
+      fileName =
+        fileName.replace(
+          /\.json$/i,
+          ""
+        );
+
+
+      // ==========================================================
+      // CONVERT TO JSON
+      // ==========================================================
+
+      const jsonOutput = {
+        category: categoryData.category,
+        subcategory: categoryData.subcategory,
+        categoryDetails: categoryData.categoryDetails,
+        people: data
+      };
+
+      const jsonString =
+        JSON.stringify(
+          jsonOutput,
+          null,
+          2
+        );
+
+
+      // ==========================================================
+      // CREATE FILE
+      // ==========================================================
+
+      const blob =
+        new Blob(
+          [jsonString],
+          {
+            type:
+              "application/json"
+          }
+        );
+
+
+      const url =
+        URL.createObjectURL(
+          blob
+        );
+
+
+      const a =
+        document.createElement(
+          "a"
+        );
+
+
+      a.href =
+        url;
+
+
+      a.download =
+        fileName +
+        ".json";
+
+
+      document.body.appendChild(
+        a
+      );
+
+
+      a.click();
+
+
+      document.body.removeChild(
+        a
+      );
+
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    }
+
+
+    // ============================================================
+    // FILE NAME MANUAL EDIT DETECTION
+    // ============================================================
+
+    document
+      .getElementById("fileName")
+      .addEventListener(
+        "input",
+        function () {
+
+          /*
+           * Once the user manually changes
+           * the filename, stop automatically
+           * replacing it with Person 1's name.
+           */
+
+          this.dataset.manuallyEdited =
+            "true";
+
+        }
+      );
+
+
+    // ============================================================
+    // CATEGORY CHANGE
+    // ============================================================
+
+    document
+      .getElementById("category")
+      .addEventListener(
+        "change",
+        updateCategoryFields
+      );
+
+
+    // ============================================================
+    // INITIALIZE
+    // ============================================================
+
+    sampleData.forEach(
+      person => {
+
+        addRow(person);
+
+      }
+    );
+
+
+    // ============================================================
+    // INITIAL FILE NAME
+    // ============================================================
+
+    updateFileNameFromPerson1();
+
+  </script>
+
+
+
+</body></html>
