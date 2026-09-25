@@ -1,0 +1,295 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Sevak List</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f7f3f7;
+    padding:30px;
+}
+
+.note{
+    background:#ffe69b;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:25px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.card{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+.card h3{
+    margin-bottom:15px;
+}
+
+.details{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+}
+
+.details div{
+    width:30%;
+    line-height:1.8;
+}
+
+.table{
+    width:100%;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:60px 60px 180px 150px 220px 170px 170px;
+    align-items:center;
+    background:white;
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:12px;
+    box-shadow:0 1px 6px rgba(0,0,0,.08);
+}
+
+.row:hover{
+    background:#fafafa;
+}
+
+input[type="checkbox"]{
+    width:22px;
+    height:22px;
+    cursor:pointer;
+}
+
+/* Popup */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.popup{
+    width:430px;
+    background:white;
+    border-radius:25px;
+    padding:35px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.popup h2{
+    margin-bottom:20px;
+}
+
+.popup p{
+    color:#666;
+    font-size:20px;
+    margin-bottom:35px;
+}
+
+.popup button{
+    width:170px;
+    height:48px;
+    border:none;
+    border-radius:30px;
+    background:#6d2db5;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.popup button:hover{
+    background:#58219a;
+}
+</style>
+
+</head>
+<body>
+
+<div class="note">
+    Important Note <br><br>
+    Please fill all the mandatory fields with * marked.
+</div>
+
+<div class="card">
+
+<h3>Seva Details</h3>
+
+<div class="details">
+<div>
+<b>Seva Type</b><br>
+Srivari Seva, Tirumala (Both Female and Male)
+</div>
+
+<div>
+<b>Seva Date</b><br>
+13/05/2026
+</div>
+
+<div>
+<b>No of Sevak</b><br>
+10
+</div>
+
+</div>
+
+</div>
+
+<div class="table" id="table"><div class="row">
+        <input type="checkbox" class="chk">
+        <div>1</div>
+        <div>Sarala 1</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9021</div>
+        <div>XXXXXXXX1371</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>2</div>
+        <div>Sarala 2</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9022</div>
+        <div>XXXXXXXX1372</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>3</div>
+        <div>Sarala 3</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9023</div>
+        <div>XXXXXXXX1373</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>4</div>
+        <div>Sarala 4</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9024</div>
+        <div>XXXXXXXX1374</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>5</div>
+        <div>Sarala 5</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9025</div>
+        <div>XXXXXXXX1375</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>6</div>
+        <div>Sarala 6</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9026</div>
+        <div>XXXXXXXX1376</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>7</div>
+        <div>Sarala 7</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9027</div>
+        <div>XXXXXXXX1377</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>8</div>
+        <div>Sarala 8</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9028</div>
+        <div>XXXXXXXX1378</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>9</div>
+        <div>Sarala 9</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9029</div>
+        <div>XXXXXXXX1379</div>
+    </div><div class="row">
+        <input type="checkbox" class="chk">
+        <div>10</div>
+        <div>Sarala 10</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX9030</div>
+        <div>XXXXXXXX1380</div>
+    </div></div>
+
+
+<div class="overlay" id="overlay" style="display: none;">
+    <div class="popup">
+        <h2>Add Sevak</h2>
+
+        <p>Sevak was successfully added to Registered Sevak list</p>
+
+        <button id="okBtn">OK</button>
+    </div>
+</div>
+
+
+<script>
+
+const table=document.getElementById("table");
+
+for(let i=1;i<=10;i++){
+
+    const row=document.createElement("div");
+
+    row.className="row";
+
+    row.innerHTML=`
+        <input type="checkbox" class="chk">
+        <div>${i}</div>
+        <div>Sarala ${i}</div>
+        <div>Female</div>
+        <div>DOB:12/08/1996 &nbsp;29 yrs</div>
+        <div>XXXXXX90${20+i}</div>
+        <div>XXXXXXXX13${70+i}</div>
+    `;
+
+    table.appendChild(row);
+}
+
+const overlay=document.getElementById("overlay");
+const okBtn=document.getElementById("okBtn");
+
+document.querySelectorAll(".chk").forEach(chk=>{
+
+    chk.addEventListener("change",function(){
+
+        if(this.checked){
+            overlay.style.display="flex";
+        }
+
+    });
+
+});
+
+okBtn.onclick=function(){
+    overlay.style.display="none";
+};
+
+</script>
+
+
+
+</body></html>
