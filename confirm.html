@@ -68,12 +68,12 @@ button{
     background:#d5d5d5;
 }
 
-.confirm-btn{
+.review_continue-btn__NOkc1{
     background:#6d2db5;
     color:white;
 }
 
-.confirm-btn:hover{
+.review_continue-btn__NOkc1:hover{
     background:#58219a;
 }
 
@@ -94,40 +94,57 @@ button{
 
 <body>
 
-<div class="card" id="confirmCard">
+<div class="card">
 
     <div id="confirmationContent">
         <h2>Confirm Booking</h2>
-        <p>Please confirm your booking to continue.</p>
+
+        <p>
+            Please confirm your booking to continue.
+        </p>
 
         <div class="buttons">
+
             <button type="button" class="back-btn" id="backBtn">
                 Back
             </button>
 
-            <button type="button" class="confirm-btn" id="confirmBtn">
+            <button type="button" class="review_continue-btn__NOkc1" id="confirmBtn">
                 Confirm
             </button>
+
         </div>
     </div>
 
     <div class="success" id="successMessage">
+
         <h2>Booking Successful</h2>
-        <p>Your booking has been successfully confirmed.</p>
+
+        <p>
+            Your booking has been successfully confirmed.
+        </p>
+
     </div>
 
 </div>
 
 <script>
 
-document.getElementById("backBtn").onclick=function(){
-    window.location.href="/check";
-};
+const backBtn = document.getElementById("backBtn");
+const confirmBtn = document.querySelector("button.review_continue-btn__NOkc1");
+const confirmationContent = document.getElementById("confirmationContent");
+const successMessage = document.getElementById("successMessage");
 
-document.getElementById("confirmBtn").onclick=function(){
-    document.getElementById("confirmationContent").style.display="none";
-    document.getElementById("successMessage").style.display="block";
-};
+backBtn.addEventListener("click", function(){
+    window.location.href = "/check";
+});
+
+confirmBtn.addEventListener("click", function(){
+
+    confirmationContent.style.display = "none";
+    successMessage.style.display = "block";
+
+});
 
 </script>
 
