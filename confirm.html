@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirm Booking</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f7f3f7;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+
+.card{
+    width:100%;
+    max-width:500px;
+    background:white;
+    border-radius:20px;
+    padding:40px;
+    text-align:center;
+    box-shadow:0 4px 18px rgba(0,0,0,.10);
+}
+
+.card h2{
+    margin-bottom:15px;
+    font-size:28px;
+}
+
+.card p{
+    color:#666;
+    font-size:18px;
+    margin-bottom:30px;
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+}
+
+button{
+    width:170px;
+    height:50px;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.back-btn{
+    background:#e5e5e5;
+    color:#333;
+}
+
+.back-btn:hover{
+    background:#d5d5d5;
+}
+
+.confirm-btn{
+    background:#6d2db5;
+    color:white;
+}
+
+.confirm-btn:hover{
+    background:#58219a;
+}
+
+.success{
+    display:none;
+}
+
+.success h2{
+    color:#2e8b57;
+}
+
+.success p{
+    color:#333;
+    margin-bottom:0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="confirmCard">
+
+    <div id="confirmationContent">
+        <h2>Confirm Booking</h2>
+        <p>Please confirm your booking to continue.</p>
+
+        <div class="buttons">
+            <button type="button" class="back-btn" id="backBtn">
+                Back
+            </button>
+
+            <button type="button" class="confirm-btn" id="confirmBtn">
+                Confirm
+            </button>
+        </div>
+    </div>
+
+    <div class="success" id="successMessage">
+        <h2>Booking Successful</h2>
+        <p>Your booking has been successfully confirmed.</p>
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("backBtn").onclick=function(){
+    window.location.href="/check";
+};
+
+document.getElementById("confirmBtn").onclick=function(){
+    document.getElementById("confirmationContent").style.display="none";
+    document.getElementById("successMessage").style.display="block";
+};
+
+</script>
+
+</body>
+</html>
